@@ -33,7 +33,7 @@ LOGO = '''
 try:
   ETSY_API_KEY = os.environ['ETSY_API_KEY']
 except:
-  print 'Please set the environment variables ETSY_API_KEY and ETSY_API_SECRET'
+  print 'Please set the environment variable ETSY_API_KEY'
   sys.exit(1)
 
 ETSY_API_URL_BASE = 'https://openapi.etsy.com/v2/{action}/?api_key=' + ETSY_API_KEY
