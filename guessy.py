@@ -38,6 +38,7 @@ except:
 
 ETSY_API_URL_BASE = 'https://openapi.etsy.com/v2/{action}/?api_key=' + ETSY_API_KEY
 IMAGE_TO_ASCII_URL = 'http://picascii.com/upload.php'
+IMAGE_TO_ASCII_URL_2 = 'http://www.glassgiant.com/ascii/ascii.php'
 
 def http(url):
   return re.sub(r'^https://|^', r'http://', url) if not url.startswith('http://') else url
@@ -48,6 +49,14 @@ def image_to_ascii(image_url):
   }).text
 
   return BeautifulSoup(response, parse_only=SoupStrainer('pre')).find('pre').get_text()
+
+def image_to_ascii_2(image_url):
+  response = requests.post(IMAGE_TO_ASCII_URL_2, data={
+    'maxwidth' : 100,
+    'webaddress' : http(image_url)
+  }).text
+
+  return BeautifulSoup(response, parse_only=SoupStrainer('font')).find('font').get_text()[:-15]
 
 def etsy_api_call(action, params={}):
   return requests.get(ETSY_API_URL_BASE.format(action=action), params=params).json()['results']
@@ -79,7 +88,7 @@ def display_menu():
     print 'Making magic happen (please be patient)'
 
     chosen_listing, dummy_listing_1, dummy_listing_2 = [get_listing() for _ in range(3)]
-    print image_to_ascii(get_listing_image_url(chosen_listing))
+    print image_to_ascii_2(get_listing_image_url(chosen_listing))
     print 'Can you guess the item?'
 
     titles = map(get_listing_title, [chosen_listing, dummy_listing_1, dummy_listing_2])
